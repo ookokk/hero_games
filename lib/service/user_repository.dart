@@ -6,7 +6,8 @@ class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> addUser(UserModel user) async {
-    await _firestore.collection('users').doc(user.email).set({
+    String? currentUid = await CacheManager.getString('uid');
+    await _firestore.collection('users').doc(currentUid).set({
       'fullName': user.fullName,
       'email': user.email,
       'birthDate': user.birthDate,
@@ -25,7 +26,9 @@ class UserRepository {
         email: snapshot['email'],
         birthDate: snapshot['birthDate'].toDate(),
         biography: snapshot['biography'],
-        hobbies: List<String>.from(snapshot['hobbies']),
+        hobbies: (snapshot['hobbies'] != null)
+            ? List<String>.from(snapshot['hobbies'])
+            : [], // Provide an empty list if 'hobbies' is null
       );
     } else {
       return null;
@@ -33,13 +36,16 @@ class UserRepository {
   }
 
   Future<void> updateUserHobbies(String email, List<String> hobbies) async {
-    await _firestore.collection('users').doc(email).update({
+    String? currentUid = await CacheManager.getString('uid');
+    await _firestore.collection('users').doc(currentUid).update({
       'hobbies': hobbies,
     });
   }
 
   Future<void> updateUserBiography(String email, String? biography) async {
-    await _firestore.collection('users').doc(email).update({
+    String? currentUid = await CacheManager.getString('uid');
+
+    await _firestore.collection('users').doc(currentUid).update({
       'biography': biography,
     });
   }
@@ -54,7 +60,7 @@ class UserRepository {
         birthDate: doc['birthDate'].toDate(),
         biography: doc['biography'],
         hobbies:
-            (doc['hobbies'] != null) ? List<String>.from(doc['hobbies']) : null,
+            (doc['hobbies'] != null) ? List<String>.from(doc['hobbies']) : [],
       );
     }).toList();
   }
