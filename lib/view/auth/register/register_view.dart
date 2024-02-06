@@ -4,7 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hero_games_case/const/device_size.dart';
+import 'package:hero_games_case/model/user_model.dart';
 import 'package:hero_games_case/service/auth_manager.dart';
+import 'package:hero_games_case/service/cache_manager.dart';
+import 'package:hero_games_case/service/user_repository.dart';
 import 'package:hero_games_case/widget/auth_button.dart';
 import 'package:hero_games_case/widget/custom_alert.dart';
 import 'package:hero_games_case/widget/custom_text_field.dart';
@@ -20,6 +23,7 @@ class RegisterView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authManager = AuthManager();
+    final userRepository = UserRepository();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -71,7 +75,7 @@ class RegisterView extends StatelessWidget {
                   const SizedBox(
                     height: 28,
                   ),
-                  buildAuthElevatedButton(context, authManager),
+                  buildLoginButton(context, authManager, userRepository),
                   const SizedBox(
                     height: 18,
                   ),
@@ -97,8 +101,8 @@ class RegisterView extends StatelessWidget {
     );
   }
 
-  AuthButton buildAuthElevatedButton(
-      BuildContext context, AuthManager authManager) {
+  AuthButton buildLoginButton(BuildContext context, AuthManager authManager,
+      UserRepository userRepository) {
     return AuthButton(
       text: 'Register',
       onTap: () async {
@@ -115,6 +119,11 @@ class RegisterView extends StatelessWidget {
             pwCnt.text,
           );
           if (user != null) {
+            CacheManager.setString('uid', user.uid);
+            userRepository.addUser(UserModel(
+                fullName: 'undefined',
+                email: emailCnt.text.trim(),
+                birthDate: DateTime.now()));
             Future.microtask(() => CustomAlert().showAuthAlertDialog(
                     true,
                     context,

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hero_games_case/model/user_model.dart';
+import 'cache_manager.dart';
 
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -14,9 +15,10 @@ class UserRepository {
     });
   }
 
-  Future<UserModel?> getUser(String email) async {
+  Future<UserModel?> getUser() async {
+    String? currentUid = await CacheManager.getString('uid');
     DocumentSnapshot snapshot =
-        await _firestore.collection('users').doc(email).get();
+        await _firestore.collection('users').doc(currentUid).get();
     if (snapshot.exists) {
       return UserModel(
         fullName: snapshot['fullName'],
@@ -51,7 +53,8 @@ class UserRepository {
         email: doc['email'],
         birthDate: doc['birthDate'].toDate(),
         biography: doc['biography'],
-        hobbies: List<String>.from(doc['hobbies']),
+        hobbies:
+            (doc['hobbies'] != null) ? List<String>.from(doc['hobbies']) : null,
       );
     }).toList();
   }

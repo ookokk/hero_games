@@ -33,7 +33,7 @@ class CustomAlert extends ChangeNotifier {
             TextButton(
               onPressed: onTextBtnPressed,
               child: Text(btnText ?? 'Okay',
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: Theme.of(context).textTheme.titleMedium),
             ),
           ],
         );

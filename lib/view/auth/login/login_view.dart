@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hero_games_case/const/device_size.dart';
 import 'package:hero_games_case/service/auth_manager.dart';
+import 'package:hero_games_case/service/cache_manager.dart';
 import 'package:hero_games_case/widget/auth_button.dart';
 import 'package:hero_games_case/widget/custom_alert.dart';
 import 'package:hero_games_case/widget/custom_text_field.dart';
@@ -70,13 +71,6 @@ class LoginView extends StatelessWidget {
                     height: 18,
                   ),
                   buildAuthButton(authManager, context),
-                  TextButton(
-                    onPressed: () async {},
-                    child: Text(
-                      'osman',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
                   const SizedBox(
                     height: 18,
                   ),
@@ -119,6 +113,7 @@ class LoginView extends StatelessWidget {
           } else {
             Navigator.pushNamedAndRemoveUntil(
                 context, '/home', (route) => false);
+            CacheManager.setString('uid', user.uid);
           }
         } catch (e) {
           CustomAlert().showAuthAlertDialog(
