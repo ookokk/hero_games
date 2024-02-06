@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hero_games_case/model/user_model.dart';
 import 'package:hero_games_case/service/auth_manager.dart';
-import 'package:hero_games_case/service/cache_manager.dart';
 import 'package:hero_games_case/service/user_repository.dart';
 import 'package:hero_games_case/view/home/widget/user_card.dart';
 import 'package:hero_games_case/widget/custom_alert.dart';

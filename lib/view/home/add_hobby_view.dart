@@ -54,7 +54,7 @@ class _AddHobbyViewState extends State<AddHobbyView> {
               onPressed: () {
                 _addHobbyToUser();
               },
-              child: Text('Add Hobby'),
+              child: const Text('Add Hobby'),
             ),
             const SizedBox(height: 16),
             Text(
